@@ -4,360 +4,420 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>pipeline — zeitra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #0a0a0a;
-    --surface: #111111;
-    --surface-2: #1a1a1a;
-    --border: rgba(255,255,255,0.07);
-    --border-2: rgba(255,255,255,0.12);
-    --text: #f0f0f0;
-    --text-muted: #666;
-    --text-dim: #444;
-    --accent: #e8e8e8;
-    --green: #4ade80;
-    --amber: #fbbf24;
-    --blue: #60a5fa;
-    --radius: 8px;
-    --radius-lg: 12px;
-  }
+:root {
+  --navy:    #0d1b2a;
+  --navy-2:  #122033;
+  --navy-3:  #162840;
+  --gold:    #c9a84c;
+  --gold-dim: #8a6e2f;
+  --gold-pale: rgba(201,168,76,0.10);
+  --gold-border: rgba(201,168,76,0.18);
+  --cream:   #f0e6d0;
+  --cream-muted: rgba(240,230,208,0.45);
+  --cream-dim:   rgba(240,230,208,0.20);
+  --cream-ghost: rgba(240,230,208,0.08);
+  --green:   #5aad7f;
+  --radius:  6px;
+  --radius-lg: 10px;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-    padding: 40px 24px;
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  min-height: 100vh;
+  padding: 48px 24px 60px;
+  -webkit-font-smoothing: antialiased;
+}
 
-  .shell {
-    max-width: 680px;
-    margin: 0 auto;
-  }
+.shell {
+  max-width: 700px;
+  margin: 0 auto;
+}
 
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 32px;
-    padding-bottom: 20px;
-    border-bottom: 0.5px solid var(--border);
-  }
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 0.5px solid var(--gold-border);
+}
 
-  .wordmark {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-  .status-line {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 12px;
-    color: var(--text-dim);
-  }
+.logo-area img {
+  height: 28px;
+  width: auto;
+  opacity: 0.92;
+}
 
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--text-dim);
-    transition: background 0.3s;
-  }
+.divider-v {
+  width: 0.5px;
+  height: 18px;
+  background: var(--gold-border);
+}
 
-  .dot.live { background: var(--green); }
-  .dot.loading { background: var(--amber); animation: pulse 1s infinite; }
-  .dot.error { background: #f87171; }
+.page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--cream-ghost);
+  border: 0.5px solid var(--gold-border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--cream-muted);
+}
 
-  .section-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 10px;
-  }
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cream-dim);
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+.dot.live    { background: var(--green); box-shadow: 0 0 6px rgba(90,173,127,0.5); }
+.dot.loading { background: var(--gold); animation: pulse 1s infinite; }
+.dot.error   { background: #d96b5a; }
 
-  .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 28px;
-  }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  .grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 28px;
-  }
+/* SECTION LABELS */
+.section-label {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--gold-border);
+}
 
-  .card {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-  }
+/* ENRICHED GRID */
+.enriched-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 
-  .card-label {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    letter-spacing: 0.03em;
-  }
+.metric-card {
+  background: var(--navy-2);
+  border: 0.5px solid var(--gold-border);
+  border-radius: var(--radius);
+  padding: 14px 16px 12px;
+  position: relative;
+  overflow: hidden;
+}
 
-  .card-number {
-    font-size: 28px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    color: var(--accent);
-    transition: opacity 0.2s;
-  }
+.metric-card.primary {
+  background: var(--gold-pale);
+  border-color: rgba(201,168,76,0.3);
+}
 
-  .card-number.loading { opacity: 0.3; }
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
+}
 
-  .card-sub {
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 4px;
-  }
+.metric-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+  margin-bottom: 8px;
+}
 
-  .unenriched-block {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px;
-    margin-bottom: 28px;
-  }
+.metric-number {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  transition: opacity 0.2s;
+}
 
-  .unenriched-main {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 0.5px solid var(--border);
-  }
+.metric-card.primary .metric-number { font-size: 44px; color: var(--gold); }
+.metric-number.loading { opacity: 0.2; }
 
-  .unenriched-number {
-    font-size: 44px;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--accent);
-    transition: opacity 0.2s;
-  }
+.metric-pct {
+  font-size: 11px;
+  color: var(--cream-dim);
+  margin-top: 5px;
+}
 
-  .unenriched-number.loading { opacity: 0.3; }
+/* BAR CHART */
+.bar-block {
+  background: var(--navy-2);
+  border: 0.5px solid var(--gold-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 32px;
+}
 
-  .unenriched-label {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+.bar-row:last-child { margin-bottom: 0; }
 
-  .source-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
+.bar-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--cream-muted);
+  width: 90px;
+  flex-shrink: 0;
+}
 
-  .source-card {
-    background: var(--surface-2);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 12px;
-  }
+.bar-track {
+  flex: 1;
+  height: 2px;
+  background: var(--cream-ghost);
+  border-radius: 1px;
+  overflow: hidden;
+}
 
-  .source-label {
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
+.bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.bar-fill.f1 { background: var(--gold); }
+.bar-fill.f2 { background: var(--gold-dim); opacity: 0.8; }
+.bar-fill.f3 { background: var(--gold-dim); opacity: 0.5; }
 
-  .source-number {
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--accent);
-    transition: opacity 0.2s;
-  }
+.bar-count {
+  font-size: 11px;
+  color: var(--cream-dim);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
 
-  .source-number.loading { opacity: 0.3; }
+/* UNENRICHED */
+.unenriched-block {
+  background: var(--navy-2);
+  border: 0.5px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
 
-  .bar-section {
-    background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px;
-    margin-bottom: 28px;
-  }
+.unenriched-hero {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  border-bottom: 0.5px solid var(--gold-border);
+}
 
-  .bar-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
+.unenriched-number {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 56px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--cream);
+  transition: opacity 0.2s;
+}
+.unenriched-number.loading { opacity: 0.2; }
 
-  .bar-row:last-child { margin-bottom: 0; }
+.unenriched-sublabel {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cream-muted);
+  padding-bottom: 3px;
+}
 
-  .bar-label {
-    font-size: 12px;
-    color: var(--text-muted);
-    width: 100px;
-    flex-shrink: 0;
-  }
+.source-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
 
-  .bar-track {
-    flex: 1;
-    height: 3px;
-    background: var(--surface-2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
+.source-cell {
+  padding: 14px 18px;
+  border-right: 0.5px solid var(--gold-border);
+}
+.source-cell:last-child { border-right: none; }
 
-  .bar-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: var(--text-muted);
-    transition: width 0.6s ease;
-  }
+.source-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 6px;
+}
 
-  .bar-fill.primary { background: var(--accent); }
-  .bar-fill.secondary { background: #888; }
-  .bar-fill.tertiary { background: #555; }
+.source-number {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--cream);
+  transition: opacity 0.2s;
+}
+.source-number.loading { opacity: 0.2; }
 
-  .bar-count {
-    font-size: 12px;
-    color: var(--text-muted);
-    width: 28px;
-    text-align: right;
-    flex-shrink: 0;
-  }
+/* FOOTER */
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 0.5px solid var(--gold-border);
+}
 
-  footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 20px;
-    border-top: 0.5px solid var(--border);
-  }
+.updated {
+  font-size: 11px;
+  color: var(--cream-dim);
+  letter-spacing: 0.03em;
+}
 
-  .updated {
-    font-size: 11px;
-    color: var(--text-dim);
-  }
+.countdown {
+  font-size: 11px;
+  color: var(--cream-dim);
+}
 
-  .refresh-btn {
-    font-size: 11px;
-    color: var(--text-dim);
-    background: none;
-    border: 0.5px solid var(--border-2);
-    border-radius: 4px;
-    padding: 4px 10px;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-    font-family: inherit;
-  }
+.refresh-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: none;
+  border: 0.5px solid var(--gold-border);
+  border-radius: 3px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.refresh-btn:hover {
+  background: var(--gold-pale);
+  border-color: rgba(201,168,76,0.4);
+}
 
-  .refresh-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
-
-  .countdown {
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-
-  @media (max-width: 480px) {
-    .grid-4 { grid-template-columns: repeat(2, 1fr); }
-    .source-grid { grid-template-columns: repeat(3, 1fr); }
-    body { padding: 24px 16px; }
-    .unenriched-number { font-size: 36px; }
-  }
+@media (max-width: 520px) {
+  .enriched-grid { grid-template-columns: 1fr 1fr; }
+  .metric-card.primary { grid-column: 1 / -1; }
+  body { padding: 28px 16px 48px; }
+}
 </style>
 </head>
 <body>
 <div class="shell">
 
   <header>
-    <span class="wordmark">zeitra / pipeline</span>
-    <div class="status-line">
+    <div class="logo-area">
+      <img src="https://zeitra.ai/logo.png" alt="Zeitra">
+      <div class="divider-v"></div>
+      <span class="page-title">Pipeline</span>
+    </div>
+    <div class="status-pill">
       <div class="dot loading" id="dot"></div>
       <span id="status-text">loading</span>
     </div>
   </header>
 
   <div class="section-label">enriched leads</div>
-  <div class="grid-4">
-    <div class="card">
-      <div class="card-label">total</div>
-      <div class="card-number loading" id="e-total">—</div>
+
+  <div class="enriched-grid" style="margin-bottom:8px;">
+    <div class="metric-card primary">
+      <div class="metric-label">total</div>
+      <div class="metric-number loading" id="e-total">—</div>
     </div>
-    <div class="card">
-      <div class="card-label">new lead</div>
-      <div class="card-number loading" id="e-new">—</div>
-      <div class="card-sub" id="e-new-pct"></div>
+    <div class="metric-card">
+      <div class="metric-label">new lead</div>
+      <div class="metric-number loading" id="e-new">—</div>
+      <div class="metric-pct" id="e-new-pct"></div>
     </div>
-    <div class="card">
-      <div class="card-label">follow up #1</div>
-      <div class="card-number loading" id="e-fu1">—</div>
-      <div class="card-sub" id="e-fu1-pct"></div>
+    <div class="metric-card">
+      <div class="metric-label">follow up #1</div>
+      <div class="metric-number loading" id="e-fu1">—</div>
+      <div class="metric-pct" id="e-fu1-pct"></div>
     </div>
-    <div class="card">
-      <div class="card-label">follow up #2</div>
-      <div class="card-number loading" id="e-fu2">—</div>
-      <div class="card-sub" id="e-fu2-pct"></div>
+    <div class="metric-card">
+      <div class="metric-label">follow up #2</div>
+      <div class="metric-number loading" id="e-fu2">—</div>
+      <div class="metric-pct" id="e-fu2-pct"></div>
     </div>
   </div>
 
-  <div class="bar-section">
+  <div class="bar-block" style="margin-bottom:32px;">
     <div class="bar-row">
       <div class="bar-label">new lead</div>
-      <div class="bar-track"><div class="bar-fill primary" id="bar-new" style="width:0%"></div></div>
-      <div class="bar-count" id="bcount-new">—</div>
+      <div class="bar-track"><div class="bar-fill f1" id="bar-new" style="width:0%"></div></div>
+      <div class="bar-count" id="bc-new">—</div>
     </div>
     <div class="bar-row">
       <div class="bar-label">follow up #1</div>
-      <div class="bar-track"><div class="bar-fill secondary" id="bar-fu1" style="width:0%"></div></div>
-      <div class="bar-count" id="bcount-fu1">—</div>
+      <div class="bar-track"><div class="bar-fill f2" id="bar-fu1" style="width:0%"></div></div>
+      <div class="bar-count" id="bc-fu1">—</div>
     </div>
     <div class="bar-row">
       <div class="bar-label">follow up #2</div>
-      <div class="bar-track"><div class="bar-fill tertiary" id="bar-fu2" style="width:0%"></div></div>
-      <div class="bar-count" id="bcount-fu2">—</div>
+      <div class="bar-track"><div class="bar-fill f3" id="bar-fu2" style="width:0%"></div></div>
+      <div class="bar-count" id="bc-fu2">—</div>
     </div>
   </div>
 
   <div class="section-label">unenriched — staging</div>
+
   <div class="unenriched-block">
-    <div class="unenriched-main">
+    <div class="unenriched-hero">
       <div class="unenriched-number loading" id="u-total">—</div>
-      <div class="unenriched-label">ready to enrich</div>
+      <div class="unenriched-sublabel">ready to enrich</div>
     </div>
-    <div class="source-grid">
-      <div class="source-card">
+    <div class="source-row">
+      <div class="source-cell">
         <div class="source-label">ad leads</div>
         <div class="source-number loading" id="u-ad">—</div>
       </div>
-      <div class="source-card">
+      <div class="source-cell">
         <div class="source-label">linkedin</div>
         <div class="source-number loading" id="u-li">—</div>
       </div>
-      <div class="source-card">
+      <div class="source-cell">
         <div class="source-label">google maps</div>
         <div class="source-number loading" id="u-gm">—</div>
       </div>
@@ -375,40 +435,46 @@
 const API = 'https://n8n-50yc.srv1306892.hstgr.cloud/webhook/lead-dashboard';
 const INTERVAL = 60;
 let timer = INTERVAL;
-let countdownHandle;
+let handle;
 
 function set(id, val) {
   const el = document.getElementById(id);
-  if (el) { el.textContent = val; el.classList.remove('loading'); }
+  if (!el) return;
+  el.textContent = val;
+  el.classList.remove('loading');
 }
 
-function pct(n, total) {
-  if (!total) return '';
-  return Math.round((n / total) * 100) + '%';
-}
+function pct(n, t) { return t ? Math.round(n/t*100)+'%' : ''; }
 
-function bar(id, n, total) {
+function bar(id, n, t) {
   const el = document.getElementById(id);
-  if (el) el.style.width = total ? Math.round((n / total) * 100) + '%' : '0%';
+  if (el) el.style.width = t ? Math.round(n/t*100)+'%' : '0%';
 }
 
 function setStatus(state, text) {
-  const dot = document.getElementById('dot');
-  const st  = document.getElementById('status-text');
-  dot.className = 'dot ' + state;
-  st.textContent = text;
+  document.getElementById('dot').className = 'dot ' + state;
+  document.getElementById('status-text').textContent = text;
+}
+
+function startCountdown() {
+  clearInterval(handle);
+  timer = INTERVAL;
+  handle = setInterval(() => {
+    timer--;
+    const el = document.getElementById('countdown');
+    if (el) el.textContent = 'refreshes in ' + timer + 's';
+    if (timer <= 0) { clearInterval(handle); fetchData(); }
+  }, 1000);
 }
 
 async function fetchData() {
   setStatus('loading', 'loading');
-  clearInterval(countdownHandle);
+  clearInterval(handle);
   try {
     const res = await fetch(API);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const d = await res.json();
-
-    const e = d.enriched;
-    const u = d.unenriched;
+    const e = d.enriched, u = d.unenriched;
 
     set('e-total', e.total);
     set('e-new',   e.new_lead);
@@ -422,34 +488,22 @@ async function fetchData() {
     bar('bar-fu1', e.followup_1, e.total);
     bar('bar-fu2', e.followup_2, e.total);
 
-    set('bcount-new', e.new_lead);
-    set('bcount-fu1', e.followup_1);
-    set('bcount-fu2', e.followup_2);
+    set('bc-new', e.new_lead);
+    set('bc-fu1', e.followup_1);
+    set('bc-fu2', e.followup_2);
 
     set('u-total', u.total);
     set('u-ad',    u.ad_leads);
     set('u-li',    u.linkedin);
     set('u-gm',    u.google_maps);
 
-    document.getElementById('updated').textContent = 'updated ' + d.updated_at;
+    set('updated', 'updated ' + d.updated_at);
     setStatus('live', 'live');
-
-    timer = INTERVAL;
-    countdownHandle = setInterval(() => {
-      timer--;
-      const c = document.getElementById('countdown');
-      if (c) c.textContent = 'next refresh in ' + timer + 's';
-      if (timer <= 0) { clearInterval(countdownHandle); fetchData(); }
-    }, 1000);
-
+    startCountdown();
   } catch(err) {
-    setStatus('error', 'error — ' + err.message);
-    document.getElementById('updated').textContent = 'failed to load';
-    timer = INTERVAL;
-    countdownHandle = setInterval(() => {
-      timer--;
-      if (timer <= 0) { clearInterval(countdownHandle); fetchData(); }
-    }, 1000);
+    setStatus('error', 'error');
+    set('updated', 'failed — ' + err.message);
+    startCountdown();
   }
 }
 
