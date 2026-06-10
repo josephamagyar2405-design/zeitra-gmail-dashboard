@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pipeline — zeitra</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --border: rgba(255,255,255,0.07);
+    --border-2: rgba(255,255,255,0.12);
+    --text: #f0f0f0;
+    --text-muted: #666;
+    --text-dim: #444;
+    --accent: #e8e8e8;
+    --green: #4ade80;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    padding: 40px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .wordmark {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .status-line {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: background 0.3s;
+  }
+
+  .dot.live { background: var(--green); }
+  .dot.loading { background: var(--amber); animation: pulse 1s infinite; }
+  .dot.error { background: #f87171; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+
+  .card-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  .card-number {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+    transition: opacity 0.2s;
+  }
+
+  .card-number.loading { opacity: 0.3; }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .unenriched-block {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+
+  .unenriched-main {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .unenriched-number {
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--accent);
+    transition: opacity 0.2s;
+  }
+
+  .unenriched-number.loading { opacity: 0.3; }
+
+  .unenriched-label {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .source-card {
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+  }
+
+  .source-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .source-number {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    transition: opacity 0.2s;
+  }
+
+  .source-number.loading { opacity: 0.3; }
+
+  .bar-section {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .bar-row:last-child { margin-bottom: 0; }
+
+  .bar-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--text-muted);
+    transition: width 0.6s ease;
+  }
+
+  .bar-fill.primary { background: var(--accent); }
+  .bar-fill.secondary { background: #888; }
+  .bar-fill.tertiary { background: #555; }
+
+  .bar-count {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .updated {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .refresh-btn {
+    font-size: 11px;
+    color: var(--text-dim);
+    background: none;
+    border: 0.5px solid var(--border-2);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    font-family: inherit;
+  }
+
+  .refresh-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+
+  .countdown {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 480px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .source-grid { grid-template-columns: repeat(3, 1fr); }
+    body { padding: 24px 16px; }
+    .unenriched-number { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <span class="wordmark">zeitra / pipeline</span>
+    <div class="status-line">
+      <div class="dot loading" id="dot"></div>
+      <span id="status-text">loading</span>
+    </div>
+  </header>
+
+  <div class="section-label">enriched leads</div>
+  <div class="grid-4">
+    <div class="card">
+      <div class="card-label">total</div>
+      <div class="card-number loading" id="e-total">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">new lead</div>
+      <div class="card-number loading" id="e-new">—</div>
+      <div class="card-sub" id="e-new-pct"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">follow up #1</div>
+      <div class="card-number loading" id="e-fu1">—</div>
+      <div class="card-sub" id="e-fu1-pct"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">follow up #2</div>
+      <div class="card-number loading" id="e-fu2">—</div>
+      <div class="card-sub" id="e-fu2-pct"></div>
+    </div>
+  </div>
+
+  <div class="bar-section">
+    <div class="bar-row">
+      <div class="bar-label">new lead</div>
+      <div class="bar-track"><div class="bar-fill primary" id="bar-new" style="width:0%"></div></div>
+      <div class="bar-count" id="bcount-new">—</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">follow up #1</div>
+      <div class="bar-track"><div class="bar-fill secondary" id="bar-fu1" style="width:0%"></div></div>
+      <div class="bar-count" id="bcount-fu1">—</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">follow up #2</div>
+      <div class="bar-track"><div class="bar-fill tertiary" id="bar-fu2" style="width:0%"></div></div>
+      <div class="bar-count" id="bcount-fu2">—</div>
+    </div>
+  </div>
+
+  <div class="section-label">unenriched — staging</div>
+  <div class="unenriched-block">
+    <div class="unenriched-main">
+      <div class="unenriched-number loading" id="u-total">—</div>
+      <div class="unenriched-label">ready to enrich</div>
+    </div>
+    <div class="source-grid">
+      <div class="source-card">
+        <div class="source-label">ad leads</div>
+        <div class="source-number loading" id="u-ad">—</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">linkedin</div>
+        <div class="source-number loading" id="u-li">—</div>
+      </div>
+      <div class="source-card">
+        <div class="source-label">google maps</div>
+        <div class="source-number loading" id="u-gm">—</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="updated" id="updated">—</span>
+    <span class="countdown" id="countdown"></span>
+    <button class="refresh-btn" onclick="fetchData()">refresh</button>
+  </footer>
+
+</div>
+<script>
+const API = 'https://n8n-50yc.srv1306892.hstgr.cloud/webhook/lead-dashboard';
+const INTERVAL = 60;
+let timer = INTERVAL;
+let countdownHandle;
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = val; el.classList.remove('loading'); }
+}
+
+function pct(n, total) {
+  if (!total) return '';
+  return Math.round((n / total) * 100) + '%';
+}
+
+function bar(id, n, total) {
+  const el = document.getElementById(id);
+  if (el) el.style.width = total ? Math.round((n / total) * 100) + '%' : '0%';
+}
+
+function setStatus(state, text) {
+  const dot = document.getElementById('dot');
+  const st  = document.getElementById('status-text');
+  dot.className = 'dot ' + state;
+  st.textContent = text;
+}
+
+async function fetchData() {
+  setStatus('loading', 'loading');
+  clearInterval(countdownHandle);
+  try {
+    const res = await fetch(API);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+
+    const e = d.enriched;
+    const u = d.unenriched;
+
+    set('e-total', e.total);
+    set('e-new',   e.new_lead);
+    set('e-fu1',   e.followup_1);
+    set('e-fu2',   e.followup_2);
+    set('e-new-pct',  pct(e.new_lead,   e.total));
+    set('e-fu1-pct',  pct(e.followup_1, e.total));
+    set('e-fu2-pct',  pct(e.followup_2, e.total));
+
+    bar('bar-new', e.new_lead,   e.total);
+    bar('bar-fu1', e.followup_1, e.total);
+    bar('bar-fu2', e.followup_2, e.total);
+
+    set('bcount-new', e.new_lead);
+    set('bcount-fu1', e.followup_1);
+    set('bcount-fu2', e.followup_2);
+
+    set('u-total', u.total);
+    set('u-ad',    u.ad_leads);
+    set('u-li',    u.linkedin);
+    set('u-gm',    u.google_maps);
+
+    document.getElementById('updated').textContent = 'updated ' + d.updated_at;
+    setStatus('live', 'live');
+
+    timer = INTERVAL;
+    countdownHandle = setInterval(() => {
+      timer--;
+      const c = document.getElementById('countdown');
+      if (c) c.textContent = 'next refresh in ' + timer + 's';
+      if (timer <= 0) { clearInterval(countdownHandle); fetchData(); }
+    }, 1000);
+
+  } catch(err) {
+    setStatus('error', 'error — ' + err.message);
+    document.getElementById('updated').textContent = 'failed to load';
+    timer = INTERVAL;
+    countdownHandle = setInterval(() => {
+      timer--;
+      if (timer <= 0) { clearInterval(countdownHandle); fetchData(); }
+    }, 1000);
+  }
+}
+
+fetchData();
+</script>
+</body>
+</html>
