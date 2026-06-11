@@ -27,22 +27,22 @@ body{background:var(--base);color:var(--body);font-family:var(--font-body);
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:rgba(200,150,46,.35);color:var(--cream)}
 
-/* AMBIENT — exact match to website */
+/* AMBIENT — pulled back ~30% on the color stops */
 .ambient{position:fixed;inset:0;z-index:-3;background:
-  radial-gradient(900px 600px at 72% 10%, rgba(200,150,46,.25), transparent 60%),
-  radial-gradient(900px 640px at 8% 38%, rgba(43,49,92,.5), transparent 65%),
-  radial-gradient(800px 600px at 88% 80%, rgba(138,100,32,.25), transparent 60%),
-  radial-gradient(760px 560px at 22% 102%, rgba(34,38,68,.55), transparent 65%),
-  linear-gradient(180deg,#13131d 0%, #111119 38%, #12121c 70%, #10101a 100%);}
+  radial-gradient(900px 600px at 72% 10%, rgba(200,150,46,.17), transparent 60%),
+  radial-gradient(900px 640px at 8% 38%, rgba(43,49,92,.35), transparent 65%),
+  radial-gradient(800px 600px at 88% 80%, rgba(138,100,32,.17), transparent 60%),
+  radial-gradient(760px 560px at 22% 102%, rgba(34,38,68,.38), transparent 65%),
+  linear-gradient(180deg,#0f0f18 0%, #0e0e17 38%, #0f0f18 70%, #0d0d16 100%);}
 .ambient::after{content:"";position:absolute;inset:0;
   background-image:url("https://zeitra.ai/noise.png");background-size:280px;
-  opacity:.09;mix-blend-mode:overlay;pointer-events:none}
+  opacity:.07;mix-blend-mode:overlay;pointer-events:none}
 
-/* DUST — boosted to match updated website */
-#dust{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.92}
+/* DUST */
+#dust{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.7}
 
-/* CIRCUIT — boosted opacity, stroke, glow to match updated website */
-.circuit{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.38;width:100%;height:100%}
+/* CIRCUIT — pulled back opacity slightly */
+.circuit{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.26;width:100%;height:100%}
 .circuit .pl{stroke:var(--amber);stroke-width:2.8;stroke-opacity:1;
   stroke-dasharray:150 1800;stroke-dashoffset:2480;
   animation:pulseTravel var(--dur,10s) linear var(--del,0s) infinite;
@@ -208,7 +208,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
   footer{flex-direction:column;align-items:flex-start;gap:10px}
 }
 
-/* REVEALS — no blur, fires on screen entry only */
+/* REVEALS */
 .rv{opacity:0;transform:translateY(22px)}
 .no-js .rv{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
@@ -224,7 +224,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
 <div class="ambient"></div>
 <canvas id="dust"></canvas>
 
-<!-- CIRCUIT SVG — boosted stroke-width and node radius to match updated website -->
 <svg class="circuit" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
   <defs><pattern id="trace" width="320" height="320" patternUnits="userSpaceOnUse">
     <path d="M20 40h120v80h90M60 300V180h150M260 20v110h-70" fill="none" stroke="#E2B057" stroke-width="2.4"/>
@@ -353,7 +352,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
 </div>
 
 <script>
-/* DUST — boosted to match website */
 (function(){
   document.documentElement.classList.remove('no-js');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -384,7 +382,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
     })();
   }
 
-  /* REVEALS — no blur, fires only when element is on screen */
   if(!reduced){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
@@ -399,7 +396,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
         }, d*1000 + 280);
       });
     },{rootMargin:'0px 0px 0px 0px', threshold:0.08});
-
     document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
   } else {
     document.querySelectorAll('.rv').forEach(function(el){
@@ -408,7 +404,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
   }
 })();
 
-/* DASHBOARD DATA */
 const API = 'https://n8n-50yc.srv1306892.hstgr.cloud/webhook/lead-dashboard';
 const INTERVAL = 60;
 let timer = INTERVAL, timerHandle;
