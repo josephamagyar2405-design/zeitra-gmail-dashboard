@@ -27,7 +27,7 @@ body{background:var(--base);color:var(--body);font-family:var(--font-body);
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 ::selection{background:rgba(200,150,46,.35);color:var(--cream)}
 
-/* EXACT ambient from zeitra.css */
+/* AMBIENT — exact match to website */
 .ambient{position:fixed;inset:0;z-index:-3;background:
   radial-gradient(1100px 700px at 78% -8%, rgba(200,150,46,.085), transparent 62%),
   radial-gradient(900px 640px at 8% 38%, rgba(43,49,92,.5), transparent 65%),
@@ -37,26 +37,30 @@ body{background:var(--base);color:var(--body);font-family:var(--font-body);
 .ambient::after{content:"";position:absolute;inset:0;
   background-image:url("https://zeitra.ai/noise.png");background-size:280px;
   opacity:.05;mix-blend-mode:overlay;pointer-events:none}
-#dust{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.55}
-.circuit{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.07;width:100%;height:100%}
-.circuit .pl{stroke:var(--amber);stroke-width:1.4;stroke-opacity:.55;
-  stroke-dasharray:80 2400;stroke-dashoffset:2480;
+
+/* DUST — boosted to match updated website */
+#dust{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.85}
+
+/* CIRCUIT — boosted opacity, stroke, glow to match updated website */
+.circuit{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.22;width:100%;height:100%}
+.circuit .pl{stroke:var(--amber);stroke-width:2.2;stroke-opacity:1;
+  stroke-dasharray:120 2200;stroke-dashoffset:2480;
   animation:pulseTravel var(--dur,10s) linear var(--del,0s) infinite;
-  filter:drop-shadow(0 0 6px rgba(226,176,87,.8))}
+  filter:drop-shadow(0 0 10px rgba(226,176,87,1))}
 @keyframes pulseTravel{to{stroke-dashoffset:0}}
 .circuit-nodes{position:fixed;inset:0;z-index:-2;pointer-events:none;width:100%;height:100%}
-.circuit-nodes .cnode{fill:rgba(200,150,46,.6);opacity:0;
+.circuit-nodes .cnode{fill:rgba(200,150,46,.9);opacity:0;
   transform-box:fill-box;transform-origin:center;
-  filter:drop-shadow(0 0 5px rgba(226,176,87,.7));
+  filter:drop-shadow(0 0 8px rgba(226,176,87,1));
   animation:nodeBreath 4.5s ease-in-out var(--cdel,0s) infinite;
   animation-fill-mode:both}
 @keyframes nodeBreath{
   0%,100%{opacity:0;transform:scale(.55)}
-  12%{opacity:.08;transform:scale(.9)}
-  22%{opacity:.15;transform:scale(1.35)}
+  12%{opacity:.35;transform:scale(.9)}
+  22%{opacity:.65;transform:scale(1.35)}
   42%,99%{opacity:0;transform:scale(.55)}}
 
-/* EXACT veil from zeitra.css */
+/* VEIL */
 .veil{position:fixed;inset:0;z-index:200;pointer-events:none;
   background:linear-gradient(120deg,#14141f,#1A1A2E);
   transform:translateY(0);animation:veilOut .62s var(--ease) .12s forwards}
@@ -204,7 +208,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
   footer{flex-direction:column;align-items:flex-start;gap:10px}
 }
 
-/* REVEALS */
+/* REVEALS — no blur, fires on screen entry only */
 .rv{opacity:0;transform:translateY(22px)}
 .no-js .rv{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
@@ -220,31 +224,33 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
 <div class="ambient"></div>
 <canvas id="dust"></canvas>
 
-<!-- EXACT circuit SVG from zeitra index.html -->
+<!-- CIRCUIT SVG — boosted stroke-width and node radius to match updated website -->
 <svg class="circuit" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
   <defs><pattern id="trace" width="320" height="320" patternUnits="userSpaceOnUse">
-    <path d="M20 40h120v80h90M60 300V180h150M260 20v110h-70" fill="none" stroke="#C8962E" stroke-width="1"/>
-    <circle cx="140" cy="40" r="2.5" fill="#C8962E"/><circle cx="230" cy="120" r="2.5" fill="#C8962E"/>
-    <circle cx="60" cy="300" r="2.5" fill="#C8962E"/><circle cx="190" cy="130" r="2.5" fill="#C8962E"/>
+    <path d="M20 40h120v80h90M60 300V180h150M260 20v110h-70" fill="none" stroke="#C8962E" stroke-width="1.8"/>
+    <circle cx="140" cy="40" r="3.5" fill="#C8962E"/>
+    <circle cx="230" cy="120" r="3.5" fill="#C8962E"/>
+    <circle cx="60"  cy="300" r="3.5" fill="#C8962E"/>
+    <circle cx="190" cy="130" r="3.5" fill="#C8962E"/>
   </pattern></defs>
   <rect width="100%" height="100%" fill="url(#trace)"/>
   <g class="pulses" fill="none" stroke-linecap="round">
-    <path class="pl" style="--dur:9s;--del:0s" d="M-60 140 H420 V360 H840 V230 H1500"/>
+    <path class="pl" style="--dur:9s;--del:0s"    d="M-60 140 H420 V360 H840 V230 H1500"/>
     <path class="pl" style="--dur:12s;--del:2.5s" d="M-60 760 H300 V520 H780 V680 H1500"/>
-    <path class="pl" style="--dur:10s;--del:5s" d="M240 960 V610 H580 V390 H1120 V540 H1500"/>
+    <path class="pl" style="--dur:10s;--del:5s"   d="M240 960 V610 H580 V390 H1120 V540 H1500"/>
     <path class="pl" style="--dur:13s;--del:1.2s" d="M-60 440 H190 V100 H660 V250 H1500"/>
     <path class="pl" style="--dur:11s;--del:6.8s" d="M1500 820 H1040 V600 H560 V850 H-60"/>
     <path class="pl" style="--dur:14s;--del:3.8s" d="M900 -60 V180 H1260 V470 H1500"/>
   </g>
 </svg>
 <svg class="circuit-nodes" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-  <circle class="cnode" cx="420" cy="360" r="3" style="--cdel:0s"/>
-  <circle class="cnode" cx="840" cy="230" r="3" style="--cdel:.55s"/>
-  <circle class="cnode" cx="780" cy="520" r="3" style="--cdel:1.1s"/>
-  <circle class="cnode" cx="1120" cy="390" r="3" style="--cdel:1.6s"/>
-  <circle class="cnode" cx="660" cy="100" r="3" style="--cdel:2.1s"/>
-  <circle class="cnode" cx="560" cy="600" r="3" style="--cdel:2.6s"/>
-  <circle class="cnode" cx="1260" cy="470" r="3" style="--cdel:3.1s"/>
+  <circle class="cnode" cx="420"  cy="360" r="4" style="--cdel:0s"/>
+  <circle class="cnode" cx="840"  cy="230" r="4" style="--cdel:.55s"/>
+  <circle class="cnode" cx="780"  cy="520" r="4" style="--cdel:1.1s"/>
+  <circle class="cnode" cx="1120" cy="390" r="4" style="--cdel:1.6s"/>
+  <circle class="cnode" cx="660"  cy="100" r="4" style="--cdel:2.1s"/>
+  <circle class="cnode" cx="560"  cy="600" r="4" style="--cdel:2.6s"/>
+  <circle class="cnode" cx="1260" cy="470" r="4" style="--cdel:3.1s"/>
 </svg>
 
 <div class="shell">
@@ -347,7 +353,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
 </div>
 
 <script>
-/* EXACT dust canvas from zeitra.js */
+/* DUST — boosted to match website */
 (function(){
   document.documentElement.classList.remove('no-js');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -358,11 +364,11 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
     var ctx = canvas.getContext('2d'), pts = [], W, H;
     function size(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
     size(); addEventListener('resize', size);
-    var N = innerWidth < 700 ? 22 : 42;
+    var N = innerWidth < 700 ? 38 : 70;
     for(var i=0;i<N;i++) pts.push({
-      x: Math.random()*innerWidth, y: Math.random()*innerHeight,
-      vx:(Math.random()-.5)*.12, vy:(Math.random()-.5)*.12,
-      r: Math.random()*1.4+.4, a: Math.random()*.06+.025
+      x:  Math.random()*innerWidth,  y:  Math.random()*innerHeight,
+      vx: (Math.random()-.5)*.15,    vy: (Math.random()-.5)*.15,
+      r:  Math.random()*2+.6,        a:  Math.random()*.13+.06
     });
     (function tick(){
       ctx.clearRect(0,0,W,H);
@@ -378,14 +384,26 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;
     })();
   }
 
-  /* staggered entrance */
+  /* REVEALS — no blur, fires only when element is on screen */
   if(!reduced){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting) return;
+        var el = entry.target;
+        io.unobserve(el);
+        var d = parseFloat(el.dataset.d||0);
+        setTimeout(function(){
+          el.style.transition='opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)';
+          el.style.opacity='1';
+          el.style.transform='translateY(0)';
+        }, d*1000 + 280);
+      });
+    },{rootMargin:'0px 0px 0px 0px', threshold:0.08});
+
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  } else {
     document.querySelectorAll('.rv').forEach(function(el){
-      var d = parseFloat(el.dataset.d||0);
-      setTimeout(function(){
-        el.style.transition='opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)';
-        el.style.opacity='1'; el.style.transform='translateY(0)';
-      },(d+.28)*1000);
+      el.style.opacity='1'; el.style.transform='none';
     });
   }
 })();
@@ -406,16 +424,16 @@ function bar(id,n,t){
   var el = document.getElementById(id);
   if(el) el.style.width = t ? Math.round(n/t*100)+'%' : '0%';
 }
-function setStatus(state, text){
-  document.getElementById('dot').className = 'dot '+state;
-  document.getElementById('status-text').textContent = text;
+function setStatus(state,text){
+  document.getElementById('dot').className='dot '+state;
+  document.getElementById('status-text').textContent=text;
 }
 function startCountdown(){
-  clearInterval(timerHandle); timer = INTERVAL;
-  timerHandle = setInterval(function(){
+  clearInterval(timerHandle); timer=INTERVAL;
+  timerHandle=setInterval(function(){
     timer--;
-    var el = document.getElementById('countdown');
-    if(el) el.textContent = 'refreshes in '+timer+'s';
+    var el=document.getElementById('countdown');
+    if(el) el.textContent='refreshes in '+timer+'s';
     if(timer<=0){ clearInterval(timerHandle); fetchData(); }
   },1000);
 }
@@ -423,48 +441,43 @@ function startCountdown(){
 async function fetchData(){
   setStatus('loading','loading');
   clearInterval(timerHandle);
-
-  // Set today label immediately
-  var now = new Date();
-  var label = now.toLocaleDateString('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric'});
-  set('today-date', label);
-
+  var now=new Date();
+  var label=now.toLocaleDateString('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric'});
+  set('today-date',label);
   try{
-    var res = await fetch(API);
+    var res=await fetch(API);
     if(!res.ok) throw new Error('HTTP '+res.status);
-    var d = await res.json();
+    var d=await res.json();
+    var e=d.enriched, u=d.unenriched, s=d.sent_today;
 
-    var e = d.enriched, u = d.unenriched, s = d.sent_today;
+    set('e-total',e.total);
+    set('e-new',e.new_lead);
+    set('e-fu1',e.followup_1);
+    set('e-fu2',e.followup_2);
+    set('e-new-pct',pct(e.new_lead,e.total));
+    set('e-fu1-pct',pct(e.followup_1,e.total));
+    set('e-fu2-pct',pct(e.followup_2,e.total));
+    bar('bar-new',e.new_lead,e.total);
+    bar('bar-fu1',e.followup_1,e.total);
+    bar('bar-fu2',e.followup_2,e.total);
+    set('bc-new',e.new_lead);
+    set('bc-fu1',e.followup_1);
+    set('bc-fu2',e.followup_2);
 
-    set('e-total', e.total);
-    set('e-new',   e.new_lead);
-    set('e-fu1',   e.followup_1);
-    set('e-fu2',   e.followup_2);
-    set('e-new-pct',  pct(e.new_lead,   e.total));
-    set('e-fu1-pct',  pct(e.followup_1, e.total));
-    set('e-fu2-pct',  pct(e.followup_2, e.total));
-    bar('bar-new', e.new_lead,   e.total);
-    bar('bar-fu1', e.followup_1, e.total);
-    bar('bar-fu2', e.followup_2, e.total);
-    set('bc-new', e.new_lead);
-    set('bc-fu1', e.followup_1);
-    set('bc-fu2', e.followup_2);
+    set('u-total',u.total);
+    set('u-ad',u.ad_leads);
+    set('u-li',u.linkedin);
+    set('u-gm',u.google_maps);
 
-    set('u-total', u.total);
-    set('u-ad',    u.ad_leads);
-    set('u-li',    u.linkedin);
-    set('u-gm',    u.google_maps);
-
-    // Sent today
-    set('sent-today', s.total);
-    var parts = [];
+    set('sent-today',s.total);
+    var parts=[];
     if(s.cold) parts.push('<span>'+s.cold+'</span> cold');
     if(s.fu1)  parts.push('<span>'+s.fu1+'</span> FU1');
     if(s.fu2)  parts.push('<span>'+s.fu2+'</span> FU2');
-    var bd = document.getElementById('sent-breakdown');
-    if(bd) bd.innerHTML = parts.length ? parts.join(' · ') : 'none yet today';
+    var bd=document.getElementById('sent-breakdown');
+    if(bd) bd.innerHTML=parts.length ? parts.join(' · ') : 'none yet today';
 
-    set('updated', 'updated '+d.updated_at);
+    set('updated','updated '+d.updated_at);
     setStatus('live','live');
     startCountdown();
   }catch(err){
